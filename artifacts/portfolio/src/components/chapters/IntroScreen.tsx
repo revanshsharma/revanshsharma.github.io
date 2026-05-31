@@ -50,14 +50,62 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [stage, setStage]         = useState<Stage>("idle");
   const buttonRef                  = useRef<HTMLButtonElement>(null);
   const rectRef                    = useRef<DOMRect | null>(null);
+  const audioCtxRef                = useRef<AudioContext | null>(null);
   const [simonLeft, setSimonLeft]  = useState(-WALK_W - 40);
   const [shardOrigin, setShardOrigin] = useState({ x: 0, y: 0 });
   const dist = typeof window !== "undefined"
     ? Math.max(window.innerWidth, window.innerHeight) * 0.38
     : 300;
 
+  const primeAudio = useCallback(() => {
+    if (typeof window === "undefined") return;
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new window.AudioContext();
+    }
+    if (audioCtxRef.current.state === "suspended") {
+      void audioCtxRef.current.resume();
+    }
+  }, []);
+
+  const playBreakSound = useCallback(() => {
+    const ctx = audioCtxRef.current;
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    const master = ctx.createGain();
+    master.gain.setValueAtTime(0.0001, now);
+    master.gain.exponentialRampToValueAtTime(0.3, now + 0.01);
+    master.gain.exponentialRampToValueAtTime(0.0001, now + 0.23);
+    master.connect(ctx.destination);
+
+    const low = ctx.createOscillator();
+    low.type = "square";
+    low.frequency.setValueAtTime(380, now);
+    low.frequency.exponentialRampToValueAtTime(120, now + 0.18);
+    const lowGain = ctx.createGain();
+    lowGain.gain.setValueAtTime(0.24, now);
+    lowGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+    low.connect(lowGain);
+    lowGain.connect(master);
+    low.start(now);
+    low.stop(now + 0.21);
+
+    const crack = ctx.createOscillator();
+    crack.type = "square";
+    crack.frequency.setValueAtTime(1100, now + 0.01);
+    crack.frequency.exponentialRampToValueAtTime(280, now + 0.14);
+    const crackGain = ctx.createGain();
+    crackGain.gain.setValueAtTime(0.1, now + 0.01);
+    crackGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+    crack.connect(crackGain);
+    crackGain.connect(master);
+    crack.start(now + 0.01);
+    crack.stop(now + 0.17);
+  }, []);
+
   const handleEnter = useCallback(() => {
     if (!buttonRef.current) return;
+    primeAudio();
     const rect = buttonRef.current.getBoundingClientRect();
     rectRef.current = rect;
     setSimonLeft(rect.left - WALK_W - 8);
@@ -68,13 +116,14 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
       setStage("whip");
       setTimeout(() => {
         setStage("breaking");
+        playBreakSound();
         setTimeout(() => {
           setStage("flash");
           setTimeout(() => { setStage("done"); onComplete(); }, 380);
         }, 550);
       }, 750);
     }, 2000);
-  }, [onComplete]);
+  }, [onComplete, playBreakSound, primeAudio]);
 
   if (stage === "done") return null;
 
