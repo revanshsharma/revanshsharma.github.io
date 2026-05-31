@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import GradientBlinds from "../GradientBlinds";
 
 /* ── Shard definitions — spawned from button centre ── */
 const SHARDS = [
@@ -83,16 +84,30 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
       animate={stage === "flash" ? { opacity: 0 } : { opacity: 1 }}
       transition={{ duration: 0.38, ease: "easeIn" }}
     >
-      {/* Grid */}
+      {/* GradientBlinds background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <GradientBlinds
+          gradientColors={['#0a0a0f', '#0c0a28', '#14103a', '#1e1060', '#c0c1ff', '#4cd7f6', '#0d2030', '#0a0a0f']}
+          angle={25}
+          noise={0.06}
+          blindCount={10}
+          blindMinWidth={80}
+          spotlightRadius={0.65}
+          spotlightSoftness={0.8}
+          spotlightOpacity={0.55}
+          mouseDampening={0.25}
+          distortAmount={0}
+          shineDirection="left"
+          mixBlendMode="normal"
+        />
+      </div>
+      {/* Grid overlay */}
       <div className="absolute inset-0 pointer-events-none"
-        style={{ backgroundImage: "linear-gradient(rgba(192,193,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(192,193,255,0.03) 1px,transparent 1px)", backgroundSize: "60px 60px" }}
+        style={{ backgroundImage: "linear-gradient(rgba(192,193,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(192,193,255,0.04) 1px,transparent 1px)", backgroundSize: "60px 60px" }}
       />
-      {/* Glows */}
-      <div className="absolute pointer-events-none" style={{ top: "10%", left: "15%", width: 500, height: 500, background: "rgba(192,193,255,0.04)", borderRadius: "50%", filter: "blur(140px)" }} />
-      <div className="absolute pointer-events-none" style={{ bottom: "10%", right: "15%", width: 400, height: 400, background: "rgba(76,215,246,0.04)", borderRadius: "50%", filter: "blur(120px)" }} />
       {/* Scanlines */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
-        style={{ backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.5) 2px,rgba(0,0,0,0.5) 4px)" }}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.035]"
+        style={{ backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.6) 2px,rgba(0,0,0,0.6) 4px)" }}
       />
 
       {/* ════════════════════════════
@@ -111,7 +126,7 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
               style={{ top: "16%" }}
               initial={{ x: "-30vw" }}
               animate={{ x: "120vw" }}
-              transition={{ duration: 2.6, ease: "linear" }}
+              transition={{ duration: 3.2, ease: [0.16, 1, 0.3, 1] }}
             >
               <img
                 src="/spiderwebswing.gif"
