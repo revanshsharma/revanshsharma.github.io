@@ -123,10 +123,18 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
             {/* Spider-Man swings past */}
             <motion.div
               className="absolute pointer-events-none"
-              style={{ top: "16%", willChange: "transform" }}
-              initial={{ x: "-30vw" }}
-              animate={{ x: "120vw" }}
-              transition={{ duration: 4.2, ease: [0.16, 1, 0.3, 1] }}
+              style={{ top: "0%", willChange: "transform" }}
+              initial={{ x: "-30vw", y: "-5vh", rotate: -10 }}
+              animate={{
+                x: ["-30vw", "10vw", "55vw", "120vw"],
+                y: ["-5vh", "2vh", "-1vh", "1vh"],
+                rotate: [-10, 3, -2, 1],
+              }}
+              transition={{
+                duration: 8.5,
+                ease: "easeInOut",
+                times: [0, 0.35, 0.7, 1],
+              }}
             >
               <img
                 src="/spiderwebswing.gif"
