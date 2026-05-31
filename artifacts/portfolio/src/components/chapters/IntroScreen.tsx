@@ -109,9 +109,9 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
             <motion.div
               className="absolute pointer-events-none"
               style={{ top: "16%" }}
-              initial={{ x: "110vw" }}
-              animate={{ x: "-110vw" }}
-              transition={{ duration: 2.8, ease: "linear" }}
+              initial={{ x: "-30vw" }}
+              animate={{ x: "120vw" }}
+              transition={{ duration: 2.6, ease: "linear" }}
             >
               <img
                 src="/spiderwebswing.gif"
