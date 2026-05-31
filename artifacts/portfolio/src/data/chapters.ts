@@ -47,7 +47,7 @@ export const chapters = {
     location: "Jabalpur, India",
     socials: [
       { name: "GitHub", url: "https://github.com/revanshsharma" },
-      { name: "LinkedIn", url: "https://linkedin.com/in/revanshsharma" },
+      { name: "LinkedIn", url: "https://linkedin.com/in/revansh-sharma-836286347" },
       { name: "Email", url: "mailto:revanshsharma.ai@gmail.com" },
       { name: "Resume", url: "#" }
     ]
