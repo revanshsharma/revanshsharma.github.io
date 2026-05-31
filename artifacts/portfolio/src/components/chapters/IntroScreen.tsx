@@ -261,39 +261,36 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
               </motion.div>
             )}
 
-            {/* Simon sprite — walk then whip */}
-            {rectRef.current && (
+            {/* Simon sprite — walk phase */}
+            {rectRef.current && stage === "walking" && (
               <motion.div
                 className="absolute"
                 style={{
                   top: rectRef.current.top + rectRef.current.height / 2,
-                  translateY: "-50%",
+                  transform: "translateY(-50%)",
                 }}
                 initial={{ left: -WALK_W - 60 }}
                 animate={{ left: simonLeft }}
-                transition={
-                  stage === "walking"
-                    ? { duration: 2.0, ease: "linear" }
-                    : { duration: 0 }
-                }
+                transition={{ duration: 2.0, ease: "linear" }}
               >
-                <AnimatePresence mode="wait">
-                  {stage === "walking" && (
-                    <motion.div key="walk" exit={{ opacity: 0 }} transition={{ duration: 0.05 }}>
-                      <TransparentGif src="/SimonWalk.gif" height={WALK_H} />
-                    </motion.div>
-                  )}
-                  {stage === "whip" && (
-                    <motion.div
-                      key="whip"
-                      initial={{ opacity: 1 }}
-                      style={{ filter: "drop-shadow(0 0 18px rgba(192,193,255,0.55))" }}
-                    >
-                      <TransparentGif src="/SimonStrongWhip.gif" height={WHIP_H} />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <TransparentGif src="/SimonWalk.gif" height={WALK_H} />
               </motion.div>
+            )}
+
+            {/* Simon sprite — whip phase (pre-mounted during walk so canvas is ready) */}
+            {rectRef.current && (
+              <div
+                className="absolute"
+                style={{
+                  top: rectRef.current.top + rectRef.current.height / 2,
+                  left: simonLeft,
+                  transform: "translateY(-50%)",
+                  filter: "drop-shadow(0 0 22px rgba(192,193,255,0.65))",
+                  display: stage === "whip" ? "block" : "none",
+                }}
+              >
+                <TransparentGif src="/SimonStrongWhip.gif" height={WHIP_H} />
+              </div>
             )}
 
             {/* Progress bar */}
