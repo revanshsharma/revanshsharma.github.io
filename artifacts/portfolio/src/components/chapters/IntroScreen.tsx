@@ -126,7 +126,7 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
               style={{ top: "16%", willChange: "transform" }}
               initial={{ x: "-30vw" }}
               animate={{ x: "120vw" }}
-              transition={{ duration: 3.2, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 4.2, ease: [0.16, 1, 0.3, 1] }}
             >
               <img
                 src="/spiderwebswing.gif"
