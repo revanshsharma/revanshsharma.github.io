@@ -50,7 +50,7 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [stage, setStage]         = useState<Stage>("idle");
   const buttonRef                  = useRef<HTMLButtonElement>(null);
   const rectRef                    = useRef<DOMRect | null>(null);
-  const audioCtxRef                = useRef<AudioContext | null>(null);
+  const breakSoundRef              = useRef<HTMLAudioElement | null>(null);
   const [simonLeft, setSimonLeft]  = useState(-WALK_W - 40);
   const [shardOrigin, setShardOrigin] = useState({ x: 0, y: 0 });
   const dist = typeof window !== "undefined"
@@ -58,49 +58,23 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
     : 300;
 
   const primeAudio = useCallback(() => {
-    if (typeof window === "undefined") return;
-    if (!audioCtxRef.current) {
-      audioCtxRef.current = new window.AudioContext();
-    }
-    if (audioCtxRef.current.state === "suspended") {
-      void audioCtxRef.current.resume();
-    }
+    if (breakSoundRef.current) return;
+    const audio = new Audio("/death-nes-version.mp3");
+    audio.preload = "auto";
+    audio.volume = 0.75;
+    breakSoundRef.current = audio;
   }, []);
 
   const playBreakSound = useCallback(() => {
-    const ctx = audioCtxRef.current;
-    if (!ctx) return;
-
-    const now = ctx.currentTime;
-    const master = ctx.createGain();
-    master.gain.setValueAtTime(0.0001, now);
-    master.gain.exponentialRampToValueAtTime(0.3, now + 0.01);
-    master.gain.exponentialRampToValueAtTime(0.0001, now + 0.23);
-    master.connect(ctx.destination);
-
-    const low = ctx.createOscillator();
-    low.type = "square";
-    low.frequency.setValueAtTime(380, now);
-    low.frequency.exponentialRampToValueAtTime(120, now + 0.18);
-    const lowGain = ctx.createGain();
-    lowGain.gain.setValueAtTime(0.24, now);
-    lowGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
-    low.connect(lowGain);
-    lowGain.connect(master);
-    low.start(now);
-    low.stop(now + 0.21);
-
-    const crack = ctx.createOscillator();
-    crack.type = "square";
-    crack.frequency.setValueAtTime(1100, now + 0.01);
-    crack.frequency.exponentialRampToValueAtTime(280, now + 0.14);
-    const crackGain = ctx.createGain();
-    crackGain.gain.setValueAtTime(0.1, now + 0.01);
-    crackGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
-    crack.connect(crackGain);
-    crackGain.connect(master);
-    crack.start(now + 0.01);
-    crack.stop(now + 0.17);
+    const audio = breakSoundRef.current;
+    if (!audio) return;
+    audio.currentTime = 0;
+    const playPromise = audio.play();
+    if (playPromise) {
+      void playPromise.catch(() => {
+        // Ignore blocked autoplay errors; audio is retriggered from user gesture flow.
+      });
+    }
   }, []);
 
   const handleEnter = useCallback(() => {
