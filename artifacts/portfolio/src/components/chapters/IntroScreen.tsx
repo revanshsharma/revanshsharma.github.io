@@ -114,9 +114,9 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
               transition={{ duration: 2.8, ease: "linear" }}
             >
               <img
-                src="/spiderswing.gif"
+                src="/spiderwebswing.gif"
                 alt=""
-                style={{ height: 140, imageRendering: "pixelated", display: "block" }}
+                style={{ height: 180, imageRendering: "auto", display: "block" }}
               />
             </motion.div>
 
