@@ -1,45 +1,51 @@
-# [Project name]
+# Revansh Sharma — Portfolio
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A cinematic 3D portfolio website — a dark, futuristic "digital headquarters" experience.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `pnpm --filter @workspace/portfolio run dev` — run the portfolio (port from `$PORT`)
+- `pnpm --filter @workspace/portfolio run typecheck` — typecheck the portfolio
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- React + Vite (artifact at `artifacts/portfolio/`)
+- React Three Fiber + Drei — 3D canvas (HeroSection sphere, AISection neural net)
+- GSAP + ScrollTrigger — scroll-triggered animations
+- Framer Motion — page transitions, intro choreography
+- Lenis — smooth scroll
+- Tailwind CSS v4 — utility styling
+- No backend — pure frontend presentation
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/portfolio/src/components/chapters/` — all page sections
+- `artifacts/portfolio/src/data/chapters.ts` — all content data (titles, subtitles, skills, etc.)
+- `artifacts/portfolio/src/components/CustomCursor.tsx` — custom magnetic cursor
+- `artifacts/portfolio/public/` — GIF assets: `spiderswing.gif`, `SimonWalk.gif`, `SimonStrongWhip.gif`
+- `artifacts/portfolio/src/index.css` — theme (CSS vars), glass-card utility, slide-up keyframe
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- **R3F pattern**: Scene objects (`useFrame`, meshes) go INSIDE `<Canvas>` as children; never call R3F hooks from a component that also renders `<Canvas>`.
+- **Intro choreography**: Spider-Man GIF flies across on load; title + button always visible underneath. Walking/whip GIFs play on "ENTER HEADQUARTERS" click before revealing main portfolio.
+- **GIF background**: GIFs have a cyan background (#5BC8F5). Treated as intentional retro pixel art aesthetic; `imageRendering: pixelated` enhances this look.
+- **Colors**: primary #c0c1ff (lavender), secondary #4cd7f6 (cyan), background #131313, tertiary #ffafd3 (pink).
+- **Fonts**: Sora (display/headings), Inter (body), JetBrains Mono (mono) — loaded via Google Fonts in index.css.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Eight scrollable chapters: Hero (3D distorted sphere + particles), About, AI Projects (neural network canvas), Journey (timeline), Game Projects, Community/Commands, Contact, Portal.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Dark, futuristic "digital headquarters" aesthetic
+- Sprite GIF animations (Spider-Man, Simon) as cinematic intro elements
+- Glassmorphic dark design with lavender/cyan palette
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- Lenis v1 constructor options: `orientation`, `gestureOrientation`, `smoothWheel`, `touchMultiplier` are all valid in v1.3.x
+- `THREE.Clock` deprecation warning is harmless — comes from Three.js internals, not app code
+- Do NOT add artifacts to root `tsconfig.json` references (leaf packages only)

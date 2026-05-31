@@ -1,0 +1,211 @@
+Transform this portfolio into a cinematic 3D storytelling experience.
+
+Do NOT make it look like a traditional portfolio.
+
+The website should feel like entering the digital headquarters of Revansh Sharma.
+
+Use:
+
+* Three.js
+* React Three Fiber
+* GSAP
+* Framer Motion
+* Lenis Smooth Scroll
+* ScrollTrigger animations
+
+Visual Style:
+
+* Dark futuristic environment
+* Floating particles
+* Dynamic lighting
+* Interactive 3D elements
+* Subtle game-inspired atmosphere
+* AAA game menu aesthetic
+* Premium startup founder vibe
+
+Hero Section:
+
+Place a large interactive 3D object in the center.
+
+Possible object:
+
+* Floating futuristic cube
+* Digital core
+* Holographic sphere
+* Glowing neural crystal
+
+The object should slowly rotate and react to mouse movement.
+
+Text:
+
+"REVANSH SHARMA"
+
+Subtitle:
+
+AI Developer
+Game Creator
+Community Leader
+
+As the user scrolls, the object should transform and reveal the next chapter.
+
+---
+
+Animation 1
+
+GifName:
+"SimonWalk.gif and SimonStrongwhip.gif"
+
+Description:
+"Whenever someone opens the site theres a start here button to which when clicked simon walks and does the whip gif then which the button breaks into animation and site opens"
+
+Animation:
+The 3D object breaks apart into floating fragments.
+
+Fragments reform into the next scene.
+
+---
+
+Animation 2
+
+Name:
+"Building Rev Works"
+
+Description:
+"Use Spiderswing.gif when someone opens the site"
+
+Animation:
+Floating design cards and branding assets emerge from the fragments.
+
+Cards orbit around the camera before merging into a single structure.
+
+---
+
+Animation 3
+
+Name:
+"Entering AI"
+
+Description:
+"Use Matrix like Animation."
+
+Animation:
+Neural network connections form in 3D space.
+
+Nodes illuminate dynamically as the user scrolls.
+
+---
+
+Animation 4
+
+Name:
+"Microsoft & Google Journey"
+
+Description:
+"Cool use of microsoft and google logos."
+
+Animation:
+Digital pathways expand outward.
+
+Achievement nodes appear along the path.
+
+Each node can be clicked to reveal details.
+
+---
+
+Animation 5
+
+Name:
+"CTRL : REFLƎX"
+
+Description:
+"Description which I will edit."
+
+Animation:
+Entire environment transforms into a futuristic game world.
+
+Buildings rise from the ground.
+
+Particles become digital rain.
+
+Camera slowly moves through the scene.
+
+---
+
+Animation 6
+
+Name:
+"Current Mission"
+
+Description:
+"Description which I will edit."
+
+Animation:
+All previous elements merge into a giant holographic command center.
+
+Display:
+
+Current Focus:
+
+* CTRL : REFLƎX
+* AI Projects
+* Community Building
+
+Current Goal:
+"Build something unforgettable."
+
+---
+
+Interactive Features
+
+* Mouse reactive lighting
+* Camera parallax
+* Smooth scrolling
+* Dynamic shadows
+* Scroll-triggered scene transitions
+* Floating ambient particles
+* 3D cards
+* Hover animations
+* Custom futuristic cursor
+
+---
+
+Final Scene
+
+A giant glowing portal appears.
+
+Text:
+
+"The Story Is Just Beginning."
+
+Buttons:
+
+GitHub
+LinkedIn
+Email
+Resume
+
+Portal slowly pulses and emits particles.
+
+---
+
+Development Requirements
+
+Use reusable components.
+
+Keep all animation descriptions editable through a single data file.
+
+Store chapter titles and descriptions in JSON so they can easily be changed later.
+
+Optimize for desktop and mobile.
+
+Prioritize cinematic storytelling over traditional portfolio layouts.
+
+The experience should feel like a mixture of:
+
+* Apple keynote visuals
+* Arc Browser website
+* Awwwards-winning portfolio
+* Unreal Engine showcase
+* Indie game studio landing page
+  (NOTE : KEEP ALL THE ANIMATION SPRITE GIF BACKGROUNDS TRANSPARENT)
+  (TAKE MORE INSPO FROM REVANSH.PDF)

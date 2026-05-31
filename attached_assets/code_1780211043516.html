@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>REVΛNSH | Developer &amp; Designer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(192, 193, 255, 0.3);
+            box-shadow: 0 0 30px rgba(192, 193, 255, 0.05);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #c0c1ff 0%, #4cd7f6 100%);
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 20px rgba(192, 193, 255, 0.4);
+        }
+        .rim-light {
+            border: 1px solid transparent;
+            background: linear-gradient(#121212, #121212) padding-box,
+                        linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%) border-box;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0e0e0e; }
+        ::-webkit-scrollbar-thumb { background: #353534; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c0c1ff; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary": "#ffafd3",
+                      "primary-fixed": "#e1e0ff",
+                      "on-primary-container": "#0d0096",
+                      "inverse-on-surface": "#313030",
+                      "tertiary-container": "#e364a7",
+                      "on-primary": "#1000a9",
+                      "secondary": "#4cd7f6",
+                      "secondary-fixed-dim": "#4cd7f6",
+                      "surface-variant": "#353534",
+                      "on-tertiary-container": "#560038",
+                      "on-background": "#e5e2e1",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "tertiary-fixed": "#ffd8e7",
+                      "on-error-container": "#ffdad6",
+                      "background": "#131313",
+                      "on-primary-fixed-variant": "#2f2ebe",
+                      "on-surface": "#e5e2e1",
+                      "surface-container": "#201f1f",
+                      "on-secondary-fixed": "#001f26",
+                      "error-container": "#93000a",
+                      "surface-container-high": "#2a2a2a",
+                      "on-surface-variant": "#c7c4d7",
+                      "surface-container-low": "#1c1b1b",
+                      "on-secondary": "#003640",
+                      "secondary-container": "#03b5d3",
+                      "surface": "#131313",
+                      "surface-container-lowest": "#0e0e0e",
+                      "on-primary-fixed": "#07006c",
+                      "primary-container": "#8083ff",
+                      "on-secondary-fixed-variant": "#004e5c",
+                      "surface-bright": "#3a3939",
+                      "error": "#ffb4ab",
+                      "surface-dim": "#131313",
+                      "on-error": "#690005",
+                      "secondary-fixed": "#acedff",
+                      "on-tertiary-fixed": "#3d0026",
+                      "outline-variant": "#464554",
+                      "inverse-surface": "#e5e2e1",
+                      "on-tertiary": "#620040",
+                      "surface-container-highest": "#353534",
+                      "inverse-primary": "#494bd6",
+                      "surface-tint": "#c0c1ff",
+                      "primary": "#c0c1ff",
+                      "on-secondary-container": "#00424e",
+                      "outline": "#908fa0",
+                      "tertiary-fixed-dim": "#ffafd3",
+                      "on-tertiary-fixed-variant": "#85145a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "margin-desktop": "64px",
+                      "stack-sm": "12px",
+                      "gutter": "24px",
+                      "container-max": "1280px",
+                      "stack-lg": "48px",
+                      "unit": "8px",
+                      "stack-md": "24px"
+              },
+              "fontFamily": {
+                      "display-xl": ["Sora"],
+                      "body-md": ["Inter"],
+                      "display-lg": ["Sora"],
+                      "display-lg-mobile": ["Sora"],
+                      "display-xl-mobile": ["Sora"],
+                      "label-md": ["JetBrains Mono"],
+                      "headline-md": ["Sora"],
+                      "headline-sm": ["Sora"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "display-xl": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "display-xl-mobile": ["40px", {"lineHeight": "1.1", "fontWeight": "800"}],
+                      "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-md": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background selection:bg-primary selection:text-on-primary">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10">
+<nav class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-3 cursor-pointer active:scale-95 transition-transform">
+<div class="w-10 h-10 rounded-full bg-primary overflow-hidden border-2 border-primary/20">
+<img alt="Revansh Sharma Portrait" class="w-full h-full object-cover" data-alt="A professional and artistic headshot of a young Indian male developer with a modern, clean-cut look. He is wearing a dark, minimalist tech-wear jacket. The background is a blurred studio setting with soft cyan and indigo rim lighting that matches a futuristic dark-mode UI aesthetic. The atmosphere is confident, sophisticated, and technologically focused." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWww8Hw4R3NGCnHWvoi88gKbPW_wvs9QUhF9hBOobXXdeMFsUEUtDNTfxtx9JKvnk3AWae9RRL6e_jPsw8VdB16_kIXftlXYe91NRFhZrClIUcqIXEvYosVJRqRPKLmnA0kTUcL602jXtS9FOrRjguqoRPCtZfF_xv5eOgbotAxUgLyDU3FL61uBc0xOKo56w5cjm5rgIkFpJZzJ1TtyjSMO3ZYz2ujtRS8VsX82AKQ2iOixOSsl_eyi2jYeaHGc7dwAmcYZ9H8xBz"/>
+</div>
+<span class="font-display-xl text-display-xl-mobile md:text-display-lg tracking-tighter text-primary">REVΛNSH</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md hover:text-secondary transition-colors duration-300" href="#portfolio">Portfolio</a>
+<a class="text-on-surface-variant font-body-md hover:text-secondary transition-colors duration-300" href="#experience">Experience</a>
+<a class="text-on-surface-variant font-body-md hover:text-secondary transition-colors duration-300" href="#skills">Skills</a>
+<a class="px-6 py-2 rounded-lg bg-primary text-on-primary-container font-bold hover:shadow-[0_0_20px_rgba(192,193,255,0.4)] transition-all active:scale-95" href="#contact">Contact</a>
+</div>
+<button class="md:hidden text-primary p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative pt-32 pb-20 md:pt-48 md:pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto overflow-hidden">
+<div class="absolute -top-24 -left-24 w-96 h-96 bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="absolute top-1/2 -right-24 w-80 h-80 bg-secondary/10 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="inline-block px-4 py-1.5 rounded-full glass-card border-primary/20 mb-6">
+<span class="font-label-md text-label-md text-secondary">DEVELOPER • DESIGNER • COMMUNITY BUILDER</span>
+</div>
+<h1 class="font-display-xl text-display-xl-mobile md:text-display-xl mb-6">
+                    Revansh <span class="text-primary">Sharma</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-10 leading-relaxed">
+                    Crafting innovative digital experiences at the intersection of AI, Game Design, and Creative Engineering. Architect of <span class="text-white font-bold italic tracking-wider">CTRL : REFLƎX</span>.
+                </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="px-8 py-4 rounded-xl primary-gradient text-on-primary-container font-bold text-lg glow-hover transition-all duration-300 active:scale-95">
+                        View Projects
+                    </button>
+<button class="px-8 py-4 rounded-xl glass-card text-on-surface font-bold text-lg hover:bg-white/5 transition-all duration-300 active:scale-95">
+                        Contact Me
+                    </button>
+</div>
+</div>
+</section>
+<!-- About & Stats -->
+<section class="py-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<div class="lg:col-span-7 flex flex-col justify-center">
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-6">Building the <span class="text-secondary">Future</span></h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8">
+                        I am an India-based student developer driven by the pursuit of digital excellence. My work spans across immersive Game Development with Unreal Engine to complex AI implementations and cutting-edge graphic design. I don't just build software; I create environments where technology feels human.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<span class="px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary font-label-md">Game Development</span>
+<span class="px-4 py-2 rounded-full bg-secondary/10 border border-secondary/20 text-secondary font-label-md">Artificial Intelligence</span>
+<span class="px-4 py-2 rounded-full bg-tertiary/10 border border-tertiary/20 text-tertiary font-label-md">Graphic Design</span>
+</div>
+</div>
+<div class="lg:col-span-5">
+<div class="glass-card rim-light p-8 rounded-2xl relative overflow-hidden h-full">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-9xl">analytics</span>
+</div>
+<div class="space-y-8 relative z-10">
+<div>
+<span class="text-primary font-display-lg text-4xl block font-bold">15+</span>
+<span class="text-on-surface-variant font-label-md uppercase tracking-widest">Projects Completed</span>
+</div>
+<div class="h-px bg-white/10 w-full"></div>
+<div>
+<span class="text-secondary font-display-lg text-4xl block font-bold">500+</span>
+<span class="text-on-surface-variant font-label-md uppercase tracking-widest">Community Members</span>
+</div>
+<div class="h-px bg-white/10 w-full"></div>
+<div>
+<span class="text-tertiary font-display-lg text-4xl block font-bold">03+</span>
+<span class="text-on-surface-variant font-label-md uppercase tracking-widest">Global Certifications</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Achievements -->
+<section class="py-stack-lg bg-surface-container-lowest">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="mb-stack-lg">
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-center mb-4">Milestones &amp; <span class="text-primary">Certifications</span></h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Microsoft -->
+<div class="glass-card p-8 rounded-2xl group">
+<div class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary text-3xl">verified_user</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-2 text-white">Microsoft Certified</h3>
+<p class="text-on-surface-variant font-body-md mb-4">Recognized expertise in cloud foundations and Azure architecture through rigorous industry testing.</p>
+<span class="text-primary font-label-md text-sm">AZURE FUNDAMENTALS</span>
+</div>
+<!-- Google -->
+<div class="glass-card p-8 rounded-2xl group">
+<div class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-secondary/20 transition-colors">
+<span class="material-symbols-outlined text-secondary text-3xl">school</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-2 text-white">Google Cloud Dev</h3>
+<p class="text-on-surface-variant font-body-md mb-4">Advanced training in machine learning pipelines and scalable back-end infrastructures.</p>
+<span class="text-secondary font-label-md text-sm">GCP SPECIALIZATION</span>
+</div>
+<!-- Leadership -->
+<div class="glass-card p-8 rounded-2xl group">
+<div class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-tertiary/20 transition-colors">
+<span class="material-symbols-outlined text-tertiary text-3xl">military_tech</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-2 text-white">Student Lead</h3>
+<p class="text-on-surface-variant font-body-md mb-4">Elected representative and lead organizer for major developer conferences and workshops.</p>
+<span class="text-tertiary font-label-md text-sm">CAMPUS AMBASSADOR</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Projects Bento Grid -->
+<section class="py-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto" id="portfolio">
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-stack-lg">Featured <span class="text-primary">Creations</span></h2>
+<div class="grid grid-cols-1 md:grid-cols-12 grid-rows-none md:grid-rows-2 gap-gutter">
+<!-- Main Featured Project -->
+<div class="md:col-span-8 md:row-span-2 relative group overflow-hidden rounded-3xl glass-card min-h-[400px]">
+<img alt="CTRL : REFLƎX Gameplay" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-60" data-alt="A cinematic still from a high-fidelity futuristic video game titled CTRL : REFLƎX. The scene shows a neon-lit cyberpunk city at night with rain-slicked streets reflecting vibrant cyan and magenta lights. In the center is a sleek, black metallic hover-vehicle moving at high speed, creating motion blur. The visual style is hyper-realistic with heavy atmospheric fog and professional cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhb8mmA81mVkspUa5nhtsE9sX0EBjuaFJbxYatKXIxGI4Eci7dLSLwlcVO6ofFVW6Zfztw_thGgagR-T-CJ_QIwEgJt--6HV2jGE8LPMf6BvuKKQ7lF0KZX_h_ejh9nL0uks1kcV4R3n8px_EwI3DtRCHU_SqKZMpLALIyQ7JZZiBKgQe2y8ekoOGxWIqjQVRmNVdTvxCeRs0JgjWNe_vMU3ZDBs3MxmrtbBlamiBmuQFb0dOqIsvud1M9HfBj0XxarUovPSkS0x3R"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 md:p-12 w-full">
+<div class="flex gap-3 mb-4">
+<span class="bg-primary/20 text-primary border border-primary/30 px-3 py-1 rounded text-xs font-bold tracking-tighter">UNREAL ENGINE 5</span>
+<span class="bg-secondary/20 text-secondary border border-secondary/30 px-3 py-1 rounded text-xs font-bold tracking-tighter">FEATURED</span>
+</div>
+<h3 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-4 text-white">CTRL : REFLƎX</h3>
+<p class="text-on-surface-variant font-body-lg max-w-xl mb-6">A high-octane atmospheric game exploring the boundary between human perception and artificial intelligence. Built with UE5 Nanite and Lumen technology.</p>
+<button class="flex items-center gap-2 text-primary font-bold group">
+                            Explore Project <span class="material-symbols-outlined transition-transform group-hover:translate-x-2">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- AI Project -->
+<div class="md:col-span-4 glass-card p-8 rounded-3xl flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-2">Neural Nexus</h3>
+<p class="text-on-surface-variant font-body-md">Self-learning AI model that adapts UI components based on user emotional sentiment analysis.</p>
+</div>
+<div class="mt-6 flex justify-between items-center">
+<span class="text-on-surface-variant font-label-md">PYTHON • PYTORCH</span>
+<span class="material-symbols-outlined text-secondary opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</div>
+</div>
+<!-- Design Project -->
+<div class="md:col-span-4 glass-card p-8 rounded-3xl flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 bg-tertiary/10 rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">token</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-2">Obsidian UI Kit</h3>
+<p class="text-on-surface-variant font-body-md">A premium design system for hardware-centric dashboard interfaces with glassmorphic depth.</p>
+</div>
+<div class="mt-6 flex justify-between items-center">
+<span class="text-on-surface-variant font-label-md">FIGMA • BLENDER</span>
+<span class="material-symbols-outlined text-tertiary opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Experience Timeline -->
+<section class="py-stack-lg bg-surface-container-low" id="experience">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<div class="lg:col-span-4">
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-4 leading-tight">Journey &amp; <br/><span class="text-secondary">Leadership</span></h2>
+<p class="text-on-surface-variant font-body-lg">Building communities and leading technological initiatives in campus environments.</p>
+</div>
+<div class="lg:col-span-8 space-y-8">
+<!-- Microsoft Campus Club -->
+<div class="relative pl-10 border-l-2 border-primary/20 pb-8">
+<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary shadow-[0_0_10px_#c0c1ff]"></div>
+<span class="text-primary font-label-md mb-2 block uppercase tracking-widest">2023 - Present</span>
+<h3 class="font-headline-sm text-headline-sm text-white mb-1">Microsoft Campus Club Lead</h3>
+<p class="text-on-surface-variant font-body-lg mb-4">Spearheading a community of 200+ students, organizing hackathons, and fostering a culture of innovation with Microsoft technologies.</p>
+<div class="flex gap-2">
+<span class="bg-surface-variant px-3 py-1 rounded text-xs font-label-md">Leadership</span>
+<span class="bg-surface-variant px-3 py-1 rounded text-xs font-label-md">Event Management</span>
+</div>
+</div>
+<!-- Microsoft Ambassador -->
+<div class="relative pl-10 border-l-2 border-secondary/20 pb-8">
+<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-secondary shadow-[0_0_10px_#4cd7f6]"></div>
+<span class="text-secondary font-label-md mb-2 block uppercase tracking-widest">2022 - 2023</span>
+<h3 class="font-headline-sm text-headline-sm text-white mb-1">Microsoft Learn Student Ambassador</h3>
+<p class="text-on-surface-variant font-body-lg mb-4">Promoted tech literacy and cloud education. Conducted 10+ workshops on Azure and GitHub for peers.</p>
+<div class="flex gap-2">
+<span class="bg-surface-variant px-3 py-1 rounded text-xs font-label-md">Public Speaking</span>
+<span class="bg-surface-variant px-3 py-1 rounded text-xs font-label-md">Mentorship</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Skills Grid -->
+<section class="py-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto" id="skills">
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-center mb-stack-lg">Technical <span class="text-primary">Arsenal</span></h2>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<div class="glass-card p-6 rounded-2xl flex flex-col items-center justify-center text-center group cursor-default">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:scale-110 transition-transform">terminal</span>
+<span class="font-label-md text-sm">Python</span>
+</div>
+<div class="glass-card p-6 rounded-2xl flex flex-col items-center justify-center text-center group cursor-default">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:scale-110 transition-transform">videogame_asset</span>
+<span class="font-label-md text-sm">Unreal Engine</span>
+</div>
+<div class="glass-card p-6 rounded-2xl flex flex-col items-center justify-center text-center group cursor-default">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:scale-110 transition-transform">layers</span>
+<span class="font-label-md text-sm">Blender</span>
+</div>
+<div class="glass-card p-6 rounded-2xl flex flex-col items-center justify-center text-center group cursor-default">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:scale-110 transition-transform">code</span>
+<span class="font-label-md text-sm">Web Dev</span>
+</div>
+<div class="glass-card p-6 rounded-2xl flex flex-col items-center justify-center text-center group cursor-default">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:scale-110 transition-transform">robot_2</span>
+<span class="font-label-md text-sm">AI Tools</span>
+</div>
+<div class="glass-card p-6 rounded-2xl flex flex-col items-center justify-center text-center group cursor-default">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:scale-110 transition-transform">brush</span>
+<span class="font-label-md text-sm">Graphic Design</span>
+</div>
+<div class="glass-card p-6 rounded-2xl flex flex-col items-center justify-center text-center group cursor-default">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:scale-110 transition-transform">cloud</span>
+<span class="font-label-md text-sm">Cloud Computing</span>
+</div>
+<div class="glass-card p-6 rounded-2xl flex flex-col items-center justify-center text-center group cursor-default">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:scale-110 transition-transform">database</span>
+<span class="font-label-md text-sm">Data Structures</span>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section class="py-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto" id="contact">
+<div class="glass-card rounded-[32px] p-8 md:p-16 relative overflow-hidden">
+<div class="absolute -bottom-20 -right-20 w-80 h-80 bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
+<div>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-6">Let's build something <span class="text-primary">legendary</span>.</h2>
+<p class="text-on-surface-variant font-body-lg mb-10">Currently open for freelance projects, internships, and collaborative ventures in AI and Game Dev.</p>
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">mail</span>
+</div>
+<div>
+<span class="text-on-surface-variant font-label-md block">Email</span>
+<a class="text-white font-body-lg hover:text-primary transition-colors" href="mailto:contact@revansh.dev">contact@revansh.dev</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">location_on</span>
+</div>
+<div>
+<span class="text-on-surface-variant font-label-md block">Location</span>
+<span class="text-white font-body-lg" data-location="India">India</span>
+</div>
+</div>
+</div>
+<div class="flex gap-4 mt-12">
+<a class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all" href="#">
+<span class="material-symbols-outlined">link</span>
+</a>
+<a class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all" href="#">
+<span class="material-symbols-outlined">terminal</span>
+</a>
+<a class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+</a>
+</div>
+</div>
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant block">Full Name</label>
+<input class="w-full bg-surface-container border-0 border-b-2 border-outline-variant px-0 py-4 focus:ring-0 focus:border-primary focus:bg-primary/5 transition-all outline-none text-white placeholder:text-outline" placeholder="John Doe" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant block">Email Address</label>
+<input class="w-full bg-surface-container border-0 border-b-2 border-outline-variant px-0 py-4 focus:ring-0 focus:border-primary focus:bg-primary/5 transition-all outline-none text-white placeholder:text-outline" placeholder="john@example.com" type="email"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant block">Message</label>
+<textarea class="w-full bg-surface-container border-0 border-b-2 border-outline-variant px-0 py-4 focus:ring-0 focus:border-primary focus:bg-primary/5 transition-all outline-none text-white placeholder:text-outline" placeholder="How can I help you?" rows="4"></textarea>
+</div>
+<button class="w-full py-4 rounded-xl primary-gradient text-on-primary-container font-bold text-lg hover:shadow-[0_0_30px_rgba(192,193,255,0.4)] transition-all active:scale-95">
+                            Send Message
+                        </button>
+</form>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-white/10 w-full py-stack-lg">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="mb-6 md:mb-0">
+<span class="font-display-lg text-display-lg text-on-surface block mb-2">REVΛNSH</span>
+<p class="text-on-surface-variant font-label-md">© 2024 REVΛNSH SHΛRMΛ. Built for the future.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">GitHub</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">LinkedIn</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Twitter</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Dribbble</a>
+</div>
+</div>
+<div class="mt-12 text-center text-outline-variant font-label-md">
+            Designed and Developed by Revansh Sharma
+        </div>
+</footer>
+<script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Spotlight effect on projects
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>
