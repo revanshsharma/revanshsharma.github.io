@@ -1,308 +1,386 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { TransparentGif } from "../TransparentGif";
 
+/* ── Shard definitions — spawned from button centre ── */
 const SHARDS = [
-  { x: -320, y: -180, rot: -35, w: 160, h: 28, delay: 0 },
-  { x: 300, y: -200, rot: 28, w: 130, h: 22, delay: 0.03 },
-  { x: -260, y: 140, rot: 18, w: 180, h: 20, delay: 0.06 },
-  { x: 280, y: 160, rot: -22, w: 140, h: 24, delay: 0.02 },
-  { x: -80, y: -220, rot: -12, w: 90, h: 18, delay: 0.05 },
-  { x: 120, y: -190, rot: 40, w: 110, h: 20, delay: 0.01 },
-  { x: -360, y: 20, rot: -50, w: 70, h: 16, delay: 0.08 },
-  { x: 360, y: 30, rot: 55, w: 85, h: 18, delay: 0.04 },
-  { x: -140, y: 200, rot: 15, w: 120, h: 14, delay: 0.07 },
-  { x: 160, y: 210, rot: -30, w: 100, h: 16, delay: 0.03 },
-  { x: 0, y: -250, rot: 8, w: 60, h: 12, delay: 0.06 },
-  { x: -200, y: -60, rot: -65, w: 50, h: 14, delay: 0.09 },
+  { dx: -1.0, dy: -1.2, rot: -40, w: 140, h: 22, delay: 0.00 },
+  { dx:  1.1, dy: -1.4, rot:  30, w: 110, h: 18, delay: 0.02 },
+  { dx: -0.6, dy:  1.3, rot:  20, w: 160, h: 20, delay: 0.04 },
+  { dx:  0.9, dy:  1.1, rot: -25, w: 120, h: 24, delay: 0.01 },
+  { dx: -0.2, dy: -1.6, rot: -10, w:  80, h: 16, delay: 0.03 },
+  { dx:  0.4, dy: -1.5, rot:  45, w:  95, h: 18, delay: 0.02 },
+  { dx: -1.4, dy:  0.2, rot: -55, w:  65, h: 14, delay: 0.05 },
+  { dx:  1.5, dy:  0.3, rot:  60, w:  75, h: 16, delay: 0.03 },
+  { dx: -0.8, dy:  1.8, rot:  18, w: 100, h: 14, delay: 0.04 },
+  { dx:  0.7, dy:  1.9, rot: -32, w:  88, h: 16, delay: 0.02 },
+  { dx:  0.0, dy: -1.9, rot:   8, w:  55, h: 12, delay: 0.05 },
+  { dx: -1.2, dy: -0.5, rot: -70, w:  45, h: 12, delay: 0.06 },
+  { dx:  1.3, dy: -0.4, rot:  70, w:  50, h: 14, delay: 0.01 },
+  { dx: -0.4, dy:  2.0, rot: -15, w:  70, h: 10, delay: 0.07 },
 ];
 
-export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
-  const [stage, setStage] = useState<"idle" | "walking" | "whip" | "breaking" | "flash" | "done">("idle");
-  const buttonRef = useRef<HTMLButtonElement>(null);
+/* Display heights for sprites (px) */
+const WALK_H = 128;
+const WHIP_H = 128;
+/* Aspect: SimonWalk 16×31, SimonStrongWhip 76×31 */
+const WALK_W = Math.round((16 / 31) * WALK_H);   // ≈ 66 px
+const WHIP_W = Math.round((76 / 31) * WHIP_H);   // ≈ 313 px
 
-  const handleEnter = () => {
+type Stage = "idle" | "walking" | "whip" | "breaking" | "flash" | "done";
+
+export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
+  const [stage, setStage] = useState<Stage>("idle");
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  /* Measured button rect — set on click */
+  const rectRef = useRef<DOMRect | null>(null);
+  /* Simon's left-edge pixel position during walk/whip */
+  const [simonLeft, setSimonLeft] = useState(-WALK_W - 40);
+  /* Shard origin in viewport coords */
+  const [shardOrigin, setShardOrigin] = useState({ x: 0, y: 0 });
+  /* Shard travel distance (scales with viewport) */
+  const dist = typeof window !== "undefined" ? Math.max(window.innerWidth, window.innerHeight) * 0.35 : 280;
+
+  const handleEnter = useCallback(() => {
+    if (!buttonRef.current) return;
+    const rect = buttonRef.current.getBoundingClientRect();
+    rectRef.current = rect;
+
+    /* Simon stops so his right edge is 8 px left of button */
+    const targetLeft = rect.left - WALK_W - 8;
+    setSimonLeft(targetLeft);
+
+    /* Shard origin = button center */
+    setShardOrigin({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
+
     setStage("walking");
 
-    // Simon walks for 2.2s, then whips
+    /* Simon reaches button after 2.0 s */
     setTimeout(() => {
       setStage("whip");
 
-      // At the moment of impact, shatter the button
+      /* Whip impact at 750 ms — shatter the button */
       setTimeout(() => {
         setStage("breaking");
 
-        // Flash and open site
+        /* Flash after shards start flying */
         setTimeout(() => {
           setStage("flash");
           setTimeout(() => {
             setStage("done");
             onComplete();
-          }, 400);
-        }, 600);
-      }, 700); // whip impact timing
-    }, 2200);
-  };
+          }, 380);
+        }, 550);
+      }, 750);
+    }, 2000);
+  }, [onComplete]);
+
+  if (stage === "done") return null;
 
   return (
-    <AnimatePresence>
-      {stage !== "done" && (
-        <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0f] overflow-hidden"
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          {/* Ambient grid */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(192,193,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(192,193,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
+    <motion.div
+      className="fixed inset-0 z-50 overflow-hidden bg-[#0a0a0f]"
+      animate={stage === "flash" ? { opacity: 0 } : { opacity: 1 }}
+      transition={{ duration: 0.38, ease: "easeIn" }}
+    >
+      {/* ── Grid background ── */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(192,193,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(192,193,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
 
-          {/* Glow blobs */}
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#c0c1ff]/5 rounded-full blur-[120px] pointer-events-none" />
-          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#4cd7f6]/5 rounded-full blur-[100px] pointer-events-none" />
+      {/* ── Ambient glows ── */}
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#c0c1ff]/[0.04] rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[#4cd7f6]/[0.04] rounded-full blur-[120px] pointer-events-none" />
 
-          {/* Scanlines */}
-          <div
-            className="absolute inset-0 pointer-events-none z-10 opacity-[0.05]"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.5) 2px, rgba(0,0,0,0.5) 4px)",
-            }}
-          />
+      {/* ── CRT scanlines ── */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.04]"
+        style={{ backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.5) 2px,rgba(0,0,0,0.5) 4px)" }}
+      />
 
-          {/* Spider-Man swings across on load */}
-          {stage === "idle" && (
+      {/* ══════════════════════════════════════════
+          IDLE — title + button, spider swings past
+         ══════════════════════════════════════════ */}
+      <AnimatePresence>
+        {stage === "idle" && (
+          <motion.div
+            key="idle"
+            className="absolute inset-0 flex flex-col items-center justify-center gap-8"
+            exit={{ opacity: 0, y: -16, transition: { duration: 0.4 } }}
+          >
+            {/* Spider-Man swings past */}
             <motion.div
-              className="absolute top-[20%] z-20 pointer-events-none"
+              className="absolute top-[18%] pointer-events-none"
               initial={{ x: "110vw" }}
               animate={{ x: "-110vw" }}
-              transition={{ duration: 2.6, ease: "linear" }}
+              transition={{ duration: 2.8, ease: "linear" }}
             >
-              <img
-                src="/spiderswing.gif"
-                alt=""
-                className="h-28 md:h-36 block"
-                style={{ imageRendering: "pixelated" }}
-              />
+              <TransparentGif src="/spiderswing.gif" height={140} />
             </motion.div>
-          )}
 
-          {/* Main content — visible in idle */}
-          <AnimatePresence>
-            {stage === "idle" && (
-              <motion.div
-                key="idle-content"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="flex flex-col items-center gap-8 relative z-20"
+            {/* Text block */}
+            <motion.div
+              className="text-center space-y-3"
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              <motion.p
+                className="text-xs font-mono tracking-[0.45em] uppercase"
+                style={{ color: "#4cd7f6" }}
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2.8, repeat: Infinity }}
               >
-                <div className="text-center space-y-3">
-                  <motion.div
-                    className="text-xs font-mono tracking-[0.4em] uppercase"
-                    style={{ color: "#4cd7f6", opacity: 0.7 }}
-                    animate={{ opacity: [0.5, 0.9, 0.5] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  >
-                    CLEARANCE GRANTED
-                  </motion.div>
+                CLEARANCE GRANTED
+              </motion.p>
 
-                  <h1
-                    className="text-4xl md:text-6xl font-bold tracking-tighter"
-                    style={{ color: "#ffffff", fontFamily: "'Sora', sans-serif" }}
-                  >
-                    REVΛNSH
-                    <span
-                      style={{
-                        background: "linear-gradient(135deg, #c0c1ff 0%, #4cd7f6 100%)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                      }}
-                    >
-                      {" "}SHARMA
-                    </span>
-                  </h1>
-
-                  <div
-                    className="text-sm font-mono tracking-[0.25em]"
-                    style={{ color: "rgba(255,255,255,0.35)" }}
-                  >
-                    AI DEVELOPER • GAME CREATOR • COMMUNITY LEADER
-                  </div>
-                </div>
-
-                {/* THE BUTTON */}
-                <motion.button
-                  ref={buttonRef}
-                  onClick={handleEnter}
-                  className="relative px-10 py-4 font-mono text-sm tracking-[0.3em] uppercase overflow-hidden"
+              <h1
+                className="text-5xl md:text-7xl font-bold tracking-tighter"
+                style={{ fontFamily: "'Sora', sans-serif", color: "#fff" }}
+              >
+                REVΛNSH{" "}
+                <span
                   style={{
-                    border: "1px solid rgba(192,193,255,0.4)",
-                    color: "#c0c1ff",
-                    background: "transparent",
-                    fontFamily: "'JetBrains Mono', monospace",
-                  }}
-                  whileHover={{
-                    borderColor: "rgba(192,193,255,0.9)",
-                    boxShadow: "0 0 30px rgba(192,193,255,0.2)",
-                  }}
-                  transition={{ duration: 0.2 }}
-                >
-                  ENTER HEADQUARTERS
-                  <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#c0c1ff]" />
-                  <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#c0c1ff]" />
-                  <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[#c0c1ff]" />
-                  <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#c0c1ff]" />
-                </motion.button>
-
-                {/* Pulsing ring */}
-                <motion.div
-                  className="absolute rounded-full border border-[#c0c1ff]/10 pointer-events-none"
-                  style={{ width: 280, height: 280, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}
-                  animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0, 0.3] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* ── WALKING STAGE ── Simon approaches from left */}
-          {(stage === "walking" || stage === "whip") && (
-            <div className="absolute inset-0 flex items-end justify-center pb-20">
-              {/* Simon's sprite */}
-              <AnimatePresence mode="wait">
-                {stage === "walking" && (
-                  <motion.div
-                    key="walk"
-                    initial={{ x: "-60vw" }}
-                    animate={{ x: "-80px" }}
-                    transition={{ duration: 2.2, ease: "linear" }}
-                  >
-                    <img
-                      src="/SimonWalk.gif"
-                      alt=""
-                      className="h-40 md:h-56 block"
-                      style={{ imageRendering: "pixelated" }}
-                    />
-                  </motion.div>
-                )}
-                {stage === "whip" && (
-                  <motion.div
-                    key="whip"
-                    initial={{ opacity: 1, x: "-80px" }}
-                    animate={{ opacity: 1, x: "-80px" }}
-                    style={{ filter: "drop-shadow(0 0 30px rgba(192,193,255,0.6))" }}
-                  >
-                    <img
-                      src="/SimonStrongWhip.gif"
-                      alt=""
-                      className="h-40 md:h-56 block"
-                      style={{ imageRendering: "pixelated" }}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Button stays visible during walk so Simon has a target */}
-              {stage === "walking" && (
-                <div
-                  className="absolute bottom-28 font-mono text-sm tracking-[0.3em] uppercase px-10 py-4"
-                  style={{
-                    border: "1px solid rgba(192,193,255,0.4)",
-                    color: "#c0c1ff",
-                    fontFamily: "'JetBrains Mono', monospace",
+                    background: "linear-gradient(135deg,#c0c1ff 0%,#4cd7f6 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
                   }}
                 >
-                  ENTER HEADQUARTERS
-                </div>
-              )}
+                  SHARMA
+                </span>
+              </h1>
 
-              {/* Loading bar */}
-              {stage === "walking" && (
-                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-56">
-                  <div className="h-px bg-white/10 w-full overflow-hidden">
-                    <motion.div
-                      className="h-full bg-[#c0c1ff]"
-                      initial={{ width: "0%" }}
-                      animate={{ width: "100%" }}
-                      transition={{ duration: 2.2, ease: "linear" }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+              <p className="text-sm font-mono tracking-[0.28em]" style={{ color: "rgba(255,255,255,0.32)" }}>
+                AI DEVELOPER&nbsp;•&nbsp;GAME CREATOR&nbsp;•&nbsp;COMMUNITY LEADER
+              </p>
+            </motion.div>
 
-          {/* ── BREAKING STAGE ── Shards fly outward */}
-          {(stage === "breaking" || stage === "flash") && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              {SHARDS.map((shard, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute"
+            {/* The button */}
+            <motion.button
+              ref={buttonRef}
+              onClick={handleEnter}
+              className="relative px-12 py-4 font-mono text-sm tracking-[0.35em] uppercase"
+              style={{
+                border: "1px solid rgba(192,193,255,0.38)",
+                color: "#c0c1ff",
+                background: "transparent",
+                fontFamily: "'JetBrains Mono', monospace",
+              }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+              whileHover={{ borderColor: "rgba(192,193,255,0.9)", boxShadow: "0 0 28px rgba(192,193,255,0.18)" }}
+            >
+              ENTER HEADQUARTERS
+              {/* Corner accents */}
+              {(["tl","tr","bl","br"] as const).map((c) => (
+                <span
+                  key={c}
+                  className="absolute w-2 h-2"
                   style={{
-                    width: shard.w,
-                    height: shard.h,
-                    background: "linear-gradient(135deg, rgba(192,193,255,0.6), rgba(76,215,246,0.4))",
-                    border: "1px solid rgba(192,193,255,0.8)",
-                    boxShadow: "0 0 12px rgba(192,193,255,0.5)",
-                  }}
-                  initial={{ x: 0, y: 0, rotate: 0, opacity: 1, scale: 1 }}
-                  animate={{
-                    x: shard.x,
-                    y: shard.y,
-                    rotate: shard.rot * 4,
-                    opacity: 0,
-                    scale: 0.3,
-                  }}
-                  transition={{
-                    duration: 0.8,
-                    delay: shard.delay,
-                    ease: [0.2, 0, 0.8, 1],
+                    top:    c.startsWith("t") ? 0 : "auto",
+                    bottom: c.startsWith("b") ? 0 : "auto",
+                    left:   c.endsWith("l")   ? 0 : "auto",
+                    right:  c.endsWith("r")   ? 0 : "auto",
+                    borderTop:    c.startsWith("t") ? "1px solid #c0c1ff" : undefined,
+                    borderBottom: c.startsWith("b") ? "1px solid #c0c1ff" : undefined,
+                    borderLeft:   c.endsWith("l")   ? "1px solid #c0c1ff" : undefined,
+                    borderRight:  c.endsWith("r")   ? "1px solid #c0c1ff" : undefined,
                   }}
                 />
               ))}
+            </motion.button>
 
-              {/* Impact ring */}
-              <motion.div
-                className="absolute rounded-full border-2 border-[#c0c1ff]"
-                initial={{ width: 80, height: 80, opacity: 1 }}
-                animate={{ width: 600, height: 600, opacity: 0 }}
-                transition={{ duration: 0.7, ease: "easeOut" }}
-              />
-              <motion.div
-                className="absolute rounded-full border border-[#4cd7f6]"
-                initial={{ width: 40, height: 40, opacity: 0.8 }}
-                animate={{ width: 400, height: 400, opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
-              />
-            </div>
-          )}
+            {/* Pulsing ring hint */}
+            <motion.div
+              className="absolute rounded-full border border-[#c0c1ff]/10 pointer-events-none"
+              style={{ width: 300, height: 300 }}
+              animate={{ scale: [1, 1.5, 1], opacity: [0.25, 0, 0.25] }}
+              transition={{ duration: 4, repeat: Infinity }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-          {/* White flash on impact */}
-          {(stage === "whip" || stage === "breaking" || stage === "flash") && (
-            <AnimatePresence>
-              {stage === "breaking" && (
-                <motion.div
-                  key="flash"
-                  className="absolute inset-0 bg-white pointer-events-none z-30"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 0.5, 0] }}
-                  transition={{ duration: 0.35 }}
-                />
-              )}
-              {stage === "flash" && (
-                <motion.div
-                  key="final-flash"
-                  className="absolute inset-0 bg-[#0a0a0f] pointer-events-none z-30"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                />
-              )}
-            </AnimatePresence>
-          )}
-        </motion.div>
-      )}
-    </AnimatePresence>
+      {/* ══════════════════════════════════════════
+          WALKING — Simon walks toward the button
+         ══════════════════════════════════════════ */}
+      <AnimatePresence>
+        {(stage === "walking" || stage === "whip") && (
+          <motion.div
+            key="action"
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            {/* Ghost button — stays at measured position */}
+            {rectRef.current && (stage === "walking" || stage === "whip") && (
+              <motion.div
+                className="absolute font-mono text-sm tracking-[0.35em] uppercase px-12 py-4"
+                style={{
+                  left: rectRef.current.left,
+                  top:  rectRef.current.top,
+                  width: rectRef.current.width,
+                  height: rectRef.current.height,
+                  border: "1px solid rgba(192,193,255,0.38)",
+                  color: "#c0c1ff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily: "'JetBrains Mono', monospace",
+                  boxSizing: "border-box",
+                }}
+                animate={
+                  stage === "whip"
+                    ? {
+                        x: [0, -3, 4, -2, 3, 0],
+                        filter: ["brightness(1)", "brightness(1.6)", "brightness(1)"],
+                      }
+                    : {}
+                }
+                transition={{ duration: 0.55, delay: 0.5 }}
+              >
+                ENTER HEADQUARTERS
+                {(["tl","tr","bl","br"] as const).map((c) => (
+                  <span
+                    key={c}
+                    className="absolute w-2 h-2"
+                    style={{
+                      top:    c.startsWith("t") ? 0 : "auto",
+                      bottom: c.startsWith("b") ? 0 : "auto",
+                      left:   c.endsWith("l")   ? 0 : "auto",
+                      right:  c.endsWith("r")   ? 0 : "auto",
+                      borderTop:    c.startsWith("t") ? "1px solid #c0c1ff" : undefined,
+                      borderBottom: c.startsWith("b") ? "1px solid #c0c1ff" : undefined,
+                      borderLeft:   c.endsWith("l")   ? "1px solid #c0c1ff" : undefined,
+                      borderRight:  c.endsWith("r")   ? "1px solid #c0c1ff" : undefined,
+                    }}
+                  />
+                ))}
+              </motion.div>
+            )}
+
+            {/* Simon sprite — walk then whip */}
+            {rectRef.current && (
+              <motion.div
+                className="absolute"
+                style={{
+                  top: rectRef.current.top + rectRef.current.height / 2,
+                  translateY: "-50%",
+                }}
+                initial={{ left: -WALK_W - 60 }}
+                animate={{ left: simonLeft }}
+                transition={
+                  stage === "walking"
+                    ? { duration: 2.0, ease: "linear" }
+                    : { duration: 0 }
+                }
+              >
+                <AnimatePresence mode="wait">
+                  {stage === "walking" && (
+                    <motion.div key="walk" exit={{ opacity: 0 }} transition={{ duration: 0.05 }}>
+                      <TransparentGif src="/SimonWalk.gif" height={WALK_H} />
+                    </motion.div>
+                  )}
+                  {stage === "whip" && (
+                    <motion.div
+                      key="whip"
+                      initial={{ opacity: 1 }}
+                      style={{ filter: "drop-shadow(0 0 18px rgba(192,193,255,0.55))" }}
+                    >
+                      <TransparentGif src="/SimonStrongWhip.gif" height={WHIP_H} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            )}
+
+            {/* Progress bar */}
+            {stage === "walking" && (
+              <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-56">
+                <div className="h-px bg-white/10 overflow-hidden">
+                  <motion.div
+                    className="h-full bg-[#c0c1ff]"
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 2.0, ease: "linear" }}
+                  />
+                </div>
+                <p className="mt-2 text-center font-mono text-[10px] tracking-[0.32em]" style={{ color: "rgba(192,193,255,0.35)" }}>
+                  BREACHING FIREWALL
+                </p>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ══════════════════════════════════════════
+          BREAKING — shards fly from button centre
+         ══════════════════════════════════════════ */}
+      <AnimatePresence>
+        {stage === "breaking" && (
+          <motion.div
+            key="breaking"
+            className="absolute inset-0 pointer-events-none"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {/* White impact flash */}
+            <motion.div
+              className="absolute inset-0 bg-white"
+              initial={{ opacity: 0.55 }}
+              animate={{ opacity: 0 }}
+              transition={{ duration: 0.28 }}
+            />
+
+            {/* Shards */}
+            {SHARDS.map((s, i) => (
+              <motion.div
+                key={i}
+                className="absolute rounded-[1px]"
+                style={{
+                  left: shardOrigin.x - s.w / 2,
+                  top:  shardOrigin.y - s.h / 2,
+                  width:  s.w,
+                  height: s.h,
+                  background: "linear-gradient(135deg,rgba(192,193,255,0.75),rgba(76,215,246,0.5))",
+                  border: "1px solid rgba(192,193,255,0.9)",
+                  boxShadow: "0 0 14px rgba(192,193,255,0.6)",
+                }}
+                initial={{ x: 0, y: 0, rotate: 0, opacity: 1, scale: 1 }}
+                animate={{
+                  x: s.dx * dist,
+                  y: s.dy * dist,
+                  rotate: s.rot * 5,
+                  opacity: 0,
+                  scale: 0.2,
+                }}
+                transition={{ duration: 0.75, delay: s.delay, ease: [0.1, 0, 0.8, 1] }}
+              />
+            ))}
+
+            {/* Expanding rings */}
+            {[0, 0.08, 0.18].map((delay, i) => (
+              <motion.div
+                key={i}
+                className="absolute rounded-full"
+                style={{
+                  left: shardOrigin.x,
+                  top:  shardOrigin.y,
+                  border: i === 0 ? "2px solid rgba(192,193,255,0.9)" : "1px solid rgba(76,215,246,0.6)",
+                  translateX: "-50%",
+                  translateY: "-50%",
+                }}
+                initial={{ width: 0, height: 0, opacity: 1 }}
+                animate={{ width: 700, height: 700, opacity: 0 }}
+                transition={{ duration: 0.65, delay, ease: "easeOut" }}
+              />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
