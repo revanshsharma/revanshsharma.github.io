@@ -233,7 +233,7 @@ void main(){ vec4 color; mainImage(color,vUv*iResolution.xy); gl_FragColor=color
       ];
       if (mouseDampening <= 0) uniforms.iMouse.value = [...mouseTargetRef.current];
     };
-    canvas.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
 
     const loop = (t: number) => {
       rafRef.current = requestAnimationFrame(loop);
@@ -258,7 +258,7 @@ void main(){ vec4 color; mainImage(color,vUv*iResolution.xy); gl_FragColor=color
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      canvas.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointermove', onPointerMove);
       ro.disconnect();
       if (canvas.parentElement === container) container.removeChild(canvas);
       programRef.current = null;

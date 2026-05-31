@@ -85,7 +85,7 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
       transition={{ duration: 0.38, ease: "easeIn" }}
     >
       {/* GradientBlinds background */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0">
         <GradientBlinds
           gradientColors={['#0a0a0f', '#0c0a28', '#14103a', '#1e1060', '#c0c1ff', '#4cd7f6', '#0d2030', '#0a0a0f']}
           angle={25}
@@ -123,7 +123,7 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
             {/* Spider-Man swings past */}
             <motion.div
               className="absolute pointer-events-none"
-              style={{ top: "16%" }}
+              style={{ top: "16%", willChange: "transform" }}
               initial={{ x: "-30vw" }}
               animate={{ x: "120vw" }}
               transition={{ duration: 3.2, ease: [0.16, 1, 0.3, 1] }}
@@ -244,16 +244,18 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
                 className="absolute"
                 style={{
                   top: rectRef.current.top + rectRef.current.height / 2,
+                  left: -WALK_W - 60,
                   transform: "translateY(-50%)",
+                  willChange: "transform",
                 }}
-                initial={{ left: -WALK_W - 60 }}
-                animate={{ left: simonLeft }}
+                initial={{ x: 0 }}
+                animate={{ x: simonLeft + WALK_W + 60 }}
                 transition={{ duration: 2.0, ease: "linear" }}
               >
                 <img
                   src="/SimonWalk.gif"
                   alt="Simon walking"
-                  style={{ height: WALK_H, width: WALK_W, imageRendering: "pixelated", display: "block" }}
+                  style={{ height: WALK_H, width: WALK_W, imageRendering: "auto", display: "block" }}
                 />
               </motion.div>
             )}
@@ -275,7 +277,7 @@ export const IntroScreen = ({ onComplete }: { onComplete: () => void }) => {
                 <img
                   src="/SimonStrongWhip.gif"
                   alt="Simon whipping"
-                  style={{ height: WHIP_H, width: WHIP_W, imageRendering: "pixelated", display: "block" }}
+                  style={{ height: WHIP_H, width: WHIP_W, imageRendering: "auto", display: "block" }}
                 />
               </motion.div>
             )}
