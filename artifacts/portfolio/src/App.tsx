@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Cookie } from "lucide-react";
+import { Toaster, toast } from "sonner";
 import { CustomCursor } from "./components/CustomCursor";
 import { IntroScreen } from "./components/chapters/IntroScreen";
 import { HeroSection } from "./components/chapters/HeroSection";
@@ -17,6 +19,17 @@ gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const [introDone, setIntroDone] = useState(false);
+
+  const showSecretAchievement = useCallback(() => {
+    toast.custom(
+      () => (
+        <div className="flex w-[240px] items-center justify-center rounded-lg bg-[#161616]/95 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-md">
+          <img src="./achievement.png" alt="achievement" className="block h-auto w-full object-contain" />
+        </div>
+      ),
+      { duration: 4500, position: "top-right" }
+    );
+  }, []);
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -44,6 +57,17 @@ function App() {
   return (
     <div className="bg-background min-h-screen text-foreground font-sans dark selection:bg-primary/30 selection:text-white">
       <CustomCursor />
+      <Toaster position="top-right" richColors={false} closeButton />
+
+      <button
+        type="button"
+        aria-label="Secret achievement"
+        title="Secret achievement"
+        onClick={showSecretAchievement}
+        className="group fixed bottom-4 right-4 z-[60] flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/20 opacity-20 backdrop-blur-md transition-all duration-300 hover:opacity-70 hover:text-[#f7d76b] focus:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c0c1ff]/40"
+      >
+        <Cookie className="h-5 w-5" />
+      </button>
       
       {!introDone && <IntroScreen onComplete={() => setIntroDone(true)} />}
 
