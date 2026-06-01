@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { chapters } from "../../data/chapters";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import BorderGlow from "../BorderGlow";
 
 export const AboutSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -60,14 +61,27 @@ export const AboutSection = () => {
           <div className="absolute -inset-10 bg-primary/5 blur-[100px] -z-10 rounded-full" />
           
           {chapters.about.stats.map((stat, i) => (
-            <div key={i} className={`glass-card p-8 rounded-2xl flex flex-col justify-center items-start border-t border-l border-white/10 hover:-translate-y-2 transition-transform duration-300 ${i === 2 ? 'sm:col-span-2 items-center text-center' : ''}`}>
-              <span className="text-5xl md:text-6xl font-bold font-display text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 mb-2">
-                {stat.value}
-              </span>
-              <span className="text-xs md:text-sm text-secondary font-mono tracking-widest uppercase">
-                {stat.label}
-              </span>
-            </div>
+            <BorderGlow
+              key={i}
+              edgeSensitivity={24}
+              glowColor="191 90 63"
+              backgroundColor="#121212"
+              borderRadius={28}
+              glowRadius={44}
+              glowIntensity={0.9}
+              coneSpread={22}
+              colors={['#6ee7ff', '#c0c1ff', '#8b5cf6']}
+              className={`transition-transform duration-300 hover:-translate-y-2 ${i === 2 ? 'sm:col-span-2' : ''}`}
+            >
+              <div className={`p-8 flex flex-col justify-center items-start ${i === 2 ? 'items-center text-center' : ''}`}>
+                <span className="text-5xl md:text-6xl font-bold font-display text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 mb-2">
+                  {stat.value}
+                </span>
+                <span className="text-xs md:text-sm text-secondary font-mono tracking-widest uppercase">
+                  {stat.label}
+                </span>
+              </div>
+            </BorderGlow>
           ))}
         </div>
         

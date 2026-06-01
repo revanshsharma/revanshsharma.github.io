@@ -1,5 +1,6 @@
 import React from "react";
 import { chapters } from "../../data/chapters";
+import BorderGlow from "../BorderGlow";
 export const JourneySection = () => {
   return (
     <section className="relative min-h-screen w-full py-24 px-6 md:px-24 z-10 bg-[#131313]">
@@ -28,14 +29,26 @@ export const JourneySection = () => {
               {/* Timeline dot */}
               <div className="absolute -left-2 top-1.5 w-4 h-4 rounded-full bg-[#131313] border-2 border-primary group-hover:bg-primary transition-colors shadow-[0_0_10px_rgba(192,193,255,0)] group-hover:shadow-[0_0_15px_rgba(192,193,255,0.8)]" />
               
-              <div className="glass-card p-6 rounded-lg hover:-translate-y-1 transition-transform border border-transparent group-hover:border-primary/30">
-                <span className="text-xs md:text-sm text-primary font-mono tracking-wider mb-2 block">
-                  {node.date}
-                </span>
-                <h3 className="text-lg md:text-xl font-sans font-medium text-gray-200">
-                  {node.title}
-                </h3>
-              </div>
+              <BorderGlow
+                edgeSensitivity={22}
+                glowColor="191 90 63"
+                backgroundColor="#121212"
+                borderRadius={18}
+                glowRadius={38}
+                glowIntensity={0.8}
+                coneSpread={20}
+                colors={['#c0c1ff', '#6ee7ff', '#8b5cf6']}
+                className="transition-transform duration-300 hover:-translate-y-1"
+              >
+                <div className="p-6 rounded-lg">
+                  <span className="text-xs md:text-sm text-primary font-mono tracking-wider mb-2 block">
+                    {node.date}
+                  </span>
+                  <h3 className="text-lg md:text-xl font-sans font-medium text-gray-200">
+                    {node.title}
+                  </h3>
+                </div>
+              </BorderGlow>
             </div>
           ))}
         </div>

@@ -3,6 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Line, Sphere } from "@react-three/drei";
 import * as THREE from "three";
 import { chapters } from "../../data/chapters";
+import BorderGlow from "../BorderGlow";
 
 const NeuralNetwork = () => {
   const group = useRef<THREE.Group>(null);
@@ -71,11 +72,23 @@ export const AISection = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {chapters.ai.projects.map((project, i) => (
-            <div key={i} className="glass-card p-8 rounded-xl border border-secondary/20 hover:border-secondary/50 transition-colors group relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-secondary to-transparent transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-              <div className="text-secondary font-mono text-sm mb-4 opacity-70">Project {String(i + 1).padStart(2, '0')}</div>
-              <h3 className="text-xl md:text-2xl font-display text-white">{project}</h3>
-            </div>
+            <BorderGlow
+              key={i}
+              edgeSensitivity={26}
+              glowColor="191 90 63"
+              backgroundColor="#121212"
+              borderRadius={24}
+              glowRadius={42}
+              glowIntensity={0.85}
+              coneSpread={24}
+              colors={['#4cd7f6', '#c0c1ff', '#6ee7ff']}
+            >
+              <div className="p-8 rounded-xl group relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-secondary to-transparent transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+                <div className="text-secondary font-mono text-sm mb-4 opacity-70">Project {String(i + 1).padStart(2, '0')}</div>
+                <h3 className="text-xl md:text-2xl font-display text-white">{project}</h3>
+              </div>
+            </BorderGlow>
           ))}
         </div>
       </div>
