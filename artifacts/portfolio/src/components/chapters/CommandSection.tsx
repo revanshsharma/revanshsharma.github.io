@@ -38,13 +38,19 @@ export const CommandSection = () => {
               </div>
             </div>
 
-            <div className="bg-black/60 border border-white/5 p-8 rounded-xl flex flex-col justify-center items-center text-center relative overflow-hidden group">
+            <a
+              href="https://www.youtube.com/watch?v=QDia3e12czc"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open current goal video in new tab"
+              className="bg-black/60 border border-white/5 p-8 rounded-xl flex flex-col justify-center items-center text-center relative overflow-hidden group hover:scale-[1.01] transition-transform"
+            >
               <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <h3 className="text-sm font-mono text-gray-500 uppercase tracking-widest mb-4">Current Goal</h3>
               <p className="text-2xl font-display text-white italic">
                 "{chapters.command.goal}"
               </p>
-            </div>
+            </a>
           </div>
         </div>
       </div>

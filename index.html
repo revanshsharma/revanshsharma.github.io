@@ -20,6 +20,39 @@
     <link rel="stylesheet" crossorigin href="/assets/index-BvVYBMXI.css">
   </head>
   <body>
-    <div id="root"></div>
+</div>
+
+    <script>
+      // Attach click handler to the "Current Goal" card after the app mounts.
+      (function() {
+        const TARGET_URL = 'https://www.youtube.com/watch?v=QDia3e12czc';
+        function attach() {
+          try {
+            const headings = Array.from(document.querySelectorAll('h3'));
+            const goalH = headings.find(h => h.textContent && h.textContent.trim() === 'Current Goal');
+            if (!goalH) return false;
+            // Prefer the clickable container (closest element with 'group' class or the parent)
+            const container = goalH.closest('.group') || goalH.parentElement;
+            if (!container) return false;
+            container.style.cursor = 'pointer';
+            container.setAttribute('role', 'link');
+            container.setAttribute('tabindex', '0');
+            container.addEventListener('click', () => { window.open(TARGET_URL, '_blank', 'noopener'); });
+            container.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.open(TARGET_URL, '_blank', 'noopener'); }
+            });
+            return true;
+          } catch (err) { return false; }
+        }
+        if (!attach()) {
+          // Retry a few times in case React hasn't rendered yet.
+          let attempts = 0;
+          const id = setInterval(() => {
+            attempts += 1;
+            if (attach() || attempts > 10) clearInterval(id);
+          }, 300);
+        }
+      })();
+    </script>
   </body>
 </html>
